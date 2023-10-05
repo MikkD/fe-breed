@@ -1,0 +1,50 @@
+.animals-container {
+    display: flex;
+    border: 1px solid gold;
+    box-sizing: border-box;
+    justify-content: center;
+}
+.search {
+    border: 1px solid red;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px;
+}
+.search-form {
+    height: 300px;
+    border-radius: 5px;
+    width: 300px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    overflow: hidden;
+    background-color: gold;
+}
+
+.results {
+    border: 1px solid red;
+    width: 50%;
+    min-height: 100vh;
+    background-color: antiquewhite;
+}
+.form-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.form-item > label {
+    display: block;
+}
+
+/* pet */
+.pet-container {
+    display: flex;
+    margin: 0px 30px;
+    padding: 10px;
+    align-items: center;
+    border-bottom: 2px solid gray;
+}
+
+.pet-img img {
+    border-radius: 50%;
+}
