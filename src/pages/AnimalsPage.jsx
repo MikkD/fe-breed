@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../pages/AnimalsPage.css';
 // import useBreedList from '../hooks/useBreedList';
 import { ANIMALS, BASE_URL } from '../utils';
+import { Link } from 'react-router-dom';
 
 const Pet = ({ name, animal, breed, images, id, city, state }) => {
     return (
-        <a href={`/details/${id}`}>
+        <Link to={`/details/${id}`}>
             <div key={id} className='pet-container'>
                 <div className='pet-img'>
                     <img width='150' height='150' src={images[0]} alt={animal} />
@@ -19,7 +20,7 @@ const Pet = ({ name, animal, breed, images, id, city, state }) => {
                     <div>Id: {id}</div>
                 </div>
             </div>
-        </a>
+        </Link>
     );
 };
 
