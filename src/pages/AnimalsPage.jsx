@@ -64,74 +64,52 @@ const useBreedList = (animal) => {
 };
 
 const SubmitForm = ({ getAnimals }) => {
-    const formRef = useRef();
-    const [petData, setPetData] = useState({ location: '', animal: '', breed: '' });
+    const [animal, setAnimal] = useState('');
     const [animals] = useState(ANIMALS);
-    const [breeds, setBreeds] = useBreedList(petData.animal);
+    const [breeds] = useBreedList(animal);
 
-    function resetForm() {
-        formRef.current.reset();
-        setPetData({ location: '', animal: '', breed: '' });
-    }
     const handleSubmit = (e) => {
         e.preventDefault();
-        getAnimals(petData);
-        resetForm();
+        const formData = new FormData(e.target);
+        const petParams = {
+            location: formData.get('location'),
+            animal: formData.get('animal'),
+            breed: formData.get('breed'),
+        };
+
+        getAnimals(petParams);
+        setAnimal();
+        e.target.reset();
     };
 
     const selectAnimal = (e) => {
         const selectedAnimalValue = e.target.value;
-        if (!selectedAnimalValue) {
-            setPetData((prevPetData) => ({ ...prevPetData, breed: '' }));
-            setBreeds([]);
-        }
-        setPetData((prevPetData) => ({ ...prevPetData, animal: selectedAnimalValue }));
-    };
-
-    const selectBreed = (e) => {
-        const selectedBreedValue = e.target.value;
-        setPetData((prevPetData) => ({ ...prevPetData, breed: selectedBreedValue }));
+        setAnimal(selectedAnimalValue);
     };
 
     return (
         <div className='search'>
-            <form className='search-form' onSubmit={handleSubmit} ref={formRef}>
+            <form className='search-form' onSubmit={handleSubmit}>
                 <div className='form-item'>
-                    <label htmlFor='location'>
-                        Location.Selected Location: {petData.location}
-                    </label>
-                    <input
-                        onChange={(e) =>
-                            setPetData((prevPetData) => ({
-                                ...prevPetData,
-                                location: e.target.value,
-                            }))
-                        }
-                        placeholder='Location'
-                        name='location'
-                        id='location'></input>
+                    <label htmlFor='location'>Location.Selected Location:</label>
+                    <input placeholder='Location' name='location' id='location'></input>
                 </div>
                 <div className='form-item'>
-                    <label htmlFor='selection'>
-                        Animal. Selected Animal: {petData.animal}
-                    </label>
-                    <select id='selection' onChange={selectAnimal}>
-                        <option value='' name='animal'></option>
+                    <label htmlFor='selection'>Animal. Selected Animal:</label>
+                    <select name='animal' id='selection' onChange={selectAnimal}>
+                        <option value=''></option>
                         {!!animals?.length &&
                             animals.map((animal) => (
-                                <option key={animal} name='animal' value={animal}>
+                                <option key={animal} value={animal}>
                                     {animal}
                                 </option>
                             ))}
                     </select>
                 </div>
                 <div className='form-item'>
-                    <label htmlFor='breed'>Breed. Selected Breed : {petData.breed}</label>
-                    <select
-                        disabled={!breeds?.length || !petData.animal}
-                        id='breed'
-                        onChange={selectBreed}>
-                        <option value={''} name='breed'></option>
+                    <label htmlFor='breed'>Breed. Selected Breed :</label>
+                    <select disabled={!breeds?.length || !animal} id='breed' name='breed'>
+                        <option value={''}></option>
                         {!!breeds.length &&
                             breeds.map((breed) => (
                                 <option key={breed} value={breed}>
@@ -141,10 +119,7 @@ const SubmitForm = ({ getAnimals }) => {
                     </select>
                 </div>
                 <div className='form-item'>
-                    <input
-                        disabled={!petData.animal}
-                        type='submit'
-                        value='submit'></input>
+                    <input disabled={!animal} type='submit' value='submit'></input>
                 </div>
             </form>
         </div>

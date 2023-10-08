@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Details from './pages/Details';
+import PetDetails from './pages/PetDatails';
 
 const router = createBrowserRouter([
     {
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/details/:id',
-        element: <Details />,
+        element: <PetDetails />,
     },
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));

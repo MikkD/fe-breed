@@ -48,3 +48,25 @@
 .pet-img img {
     border-radius: 50%;
 }
+/* Pet-Details */
+.pet-details-container {
+    box-sizing: border-box;
+    border: 1px solid red;
+    height: 100vh;
+    padding: 20px;
+}
+.carousel {
+    display: flex;
+}
+
+.pet-details-container img {
+    border-radius: 50%;
+    padding: 10px;
+}
+.non-active-img {
+    cursor: pointer;
+}
+.active-img {
+    opacity: 0.7;
+    cursor: disabled;
+}
