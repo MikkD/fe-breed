@@ -1,13 +1,11 @@
-import React, { Children } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PetDetails from './pages/PetDatails';
 import TodoApp from './pages/TodoApp';
-import { NavLink, Outlet } from 'react-router-dom';
 import AnimalsPage from './pages/AnimalsPage';
+import { createBrowserRouter, RouterProvider, NavLink, Outlet } from 'react-router-dom';
+import { todoState } from './mobx/todosState';
+import './index.css';
 
 function Layout() {
     return (
@@ -48,7 +46,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/todo',
-                element: <TodoApp />,
+                element: <TodoApp todoState={todoState} />,
             },
         ],
     },
@@ -59,5 +57,3 @@ root.render(
         <RouterProvider router={router} />
     </React.StrictMode>
 );
-
-reportWebVitals();

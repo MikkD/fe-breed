@@ -16,7 +16,7 @@ class TodosState {
         });
     }
 
-    addTodo(event) {
+    addTodo = (event) => {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
@@ -27,42 +27,46 @@ class TodosState {
                 text: todoText,
                 completed: false,
             };
-            setTodos((prevTodos) => [...prevTodos, newTodo]);
+            console.log(' newTodo:', newTodo);
+
+            this.todos.push(newTodo);
             form.reset();
         }
-    }
+        console.log('this.todos', this.todos);
+    };
 
-    completeAllTodos() {
-        setTodos((prevTodos) =>
-            prevTodos.map((prevTodo) => ({ ...prevTodo, completed: true }))
-        );
-    }
+    completeAllTodos = () => {
+        this.todos = this.todos.map((prevTodo) => ({ ...prevTodo, completed: true }));
+    };
 
-    resetAllTodos() {
-        setTodos((prevTodos) =>
-            prevTodos.map((prevTodo) => ({ ...prevTodo, completed: false }))
-        );
-    }
+    resetAllTodos = () => {
+        this.todos = this.todos.map((prevTodo) => ({ ...prevTodo, completed: false }));
+    };
 
-    removeTodo(id) {
-        console.log('removeTod =>id', id);
-        setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== id));
-    }
+    removeTodo = (id) => {
+        console.log('removeTodo =>id', id);
+        this.todos = this.todos.filter((prevTodo) => prevTodo.id !== id);
+    };
 
-    toggleTodo(id) {
-        console.log('🚀 ~ file: toggleTodo.jsx:70 ~ TodoApp ~ id:', id);
-        setTodos((prevTodos) =>
-            prevTodos.map((prevTodo) => {
-                if (prevTodo.id === Number(id)) {
-                    return {
-                        ...prevTodo,
-                        completed: !prevTodo.completed,
-                    };
-                }
-                return prevTodo;
-            })
-        );
+    toggleTodo = (id) => {
+        console.log('toggleTodo ~ id:', id);
+        this.todos = this.todos.map((prevTodo) => {
+            if (prevTodo.id === Number(id)) {
+                return {
+                    ...prevTodo,
+                    completed: !prevTodo.completed,
+                };
+            }
+            return prevTodo;
+        });
+    };
+
+    get completedTodosCount() {
+        return this.todos.filter((todo) => todo.completed).length;
+    }
+    get incompletedTodosCount() {
+        return this.todos.filter((todo) => !todo.completed).length;
     }
 }
 
-export const ObservableTodosState = new TodosState();
+export const todoState = new TodosState();

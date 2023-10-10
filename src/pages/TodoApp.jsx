@@ -1,93 +1,49 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './TodoApp.scss';
+import { observer } from 'mobx-react-lite';
 
-const Todo = ({ todo: { completed, text, id }, removeTodo, toggleTodo }) => {
+const Todo = observer(({ todo: { completed, text, id }, removeTodo, toggleTodo }) => {
     return (
-        <div>
-            {text}
-            <input type='checkbox' checked={completed} onChange={() => toggleTodo(id)} />
-            <button onClick={() => removeTodo(id)}>X</button>
-        </div>
+        <li>
+            <div>
+                {text}
+                <input
+                    type='checkbox'
+                    checked={completed}
+                    onChange={() => toggleTodo(id)}
+                />
+                <button onClick={() => removeTodo(id)}>X</button>
+            </div>
+        </li>
     );
-};
+});
 
-const TodoList = ({ todos, removeTodo, toggleTodo }) => {
-    console.log('🚀 ~ todos:', todos);
+const TodoList = observer(({ todoState }) => {
+    const todos = todoState.todos || [];
+
     return (
         <ul className='todo-list'>
             {!todos?.length ? (
                 <h4>....Add Todo</h4>
             ) : (
                 todos.map((todo) => (
-                    <li key={todo.id}>
-                        <Todo
-                            todo={todo}
-                            removeTodo={removeTodo}
-                            toggleTodo={toggleTodo}
-                        />
-                    </li>
+                    <Todo
+                        key={todo.id}
+                        todo={todo}
+                        removeTodo={todoState.removeTodo}
+                        toggleTodo={todoState.toggleTodo}
+                    />
                 ))
             )}
         </ul>
     );
-};
+});
 
-function TodoApp() {
-    const [todos, setTodos] = useState([]);
-    const completedTodoCount = 5;
-    const incompletedTodoCount = 10;
-
-    function addTodo(event) {
-        event.preventDefault();
-        const form = event.target;
-        const formData = new FormData(form);
-        const todoText = formData.get('todo-input-value');
-        if (todoText) {
-            const newTodo = {
-                id: Math.ceil(Math.random() * 1000),
-                text: todoText,
-                completed: false,
-            };
-            setTodos((prevTodos) => [...prevTodos, newTodo]);
-            form.reset();
-        }
-    }
-
-    function completeAllTodos() {
-        setTodos((prevTodos) =>
-            prevTodos.map((prevTodo) => ({ ...prevTodo, completed: true }))
-        );
-    }
-
-    function resetAllTodos() {
-        setTodos((prevTodos) =>
-            prevTodos.map((prevTodo) => ({ ...prevTodo, completed: false }))
-        );
-    }
-
-    function removeTodo(id) {
-        console.log('removeTod =>id', id);
-        setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== id));
-    }
-
-    function toggleTodo(id) {
-        console.log('🚀 ~ file: toggleTodo.jsx:70 ~ TodoApp ~ id:', id);
-        setTodos((prevTodos) =>
-            prevTodos.map((prevTodo) => {
-                if (prevTodo.id === Number(id)) {
-                    return {
-                        ...prevTodo,
-                        completed: !prevTodo.completed,
-                    };
-                }
-                return prevTodo;
-            })
-        );
-    }
-
+const TodoApp = observer(({ todoState }) => {
+    console.log('🚀 ~  todoState:', todoState);
     return (
         <div className='todo-wrapper'>
-            <form onSubmit={addTodo}>
+            <form onSubmit={(e) => todoState.addTodo(e)}>
                 <label htmlFor='todo-input'>Enter todo </label>
                 <input
                     name='todo-input-value'
@@ -98,18 +54,21 @@ function TodoApp() {
                 <input type='submit' value='add todo' />
             </form>
             <br />
-            <div>Number of completed todos: {completedTodoCount}</div>
+            <div>Number of completed todos: {todoState.completedTodoCount}</div>
             <div>
-                <button onClick={completeAllTodos}> Complete all todos </button>
+                <button onClick={() => todoState.completeAllTodos}>
+                    {' '}
+                    Complete all todos{' '}
+                </button>
             </div>
             <br />
-            <div> Number of incompleted todos: {incompletedTodoCount}</div>
+            <div> Number of incompleted todos: {todoState.incompletedTodoCount}</div>
             <div>
-                <button onClick={resetAllTodos}> Reset all todos</button>
+                <button onClick={todoState.resetAllTodos}> Reset all todos</button>
             </div>
-            <TodoList todos={todos} removeTodo={removeTodo} toggleTodo={toggleTodo} />
+            <TodoList todoState={todoState} />
         </div>
     );
-}
+});
 
 export default TodoApp;

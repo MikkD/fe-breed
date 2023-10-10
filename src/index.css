@@ -25,3 +25,15 @@ header a.active {
     border: 1px solid rebeccapurple;
     height: calc(100vh - 60px);
 }
+
+.App {
+    box-sizing: border-box;
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+
+ul {
+    list-style: none;
+}
