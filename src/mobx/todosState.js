@@ -17,22 +17,17 @@ class TodosState {
     }
 
     addTodo = (event) => {
-        event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
-        const todoText = formData.get('todo-input-value');
+        const todoText = formData.get('todo-input');
         if (todoText) {
             const newTodo = {
                 id: Math.ceil(Math.random() * 1000),
                 text: todoText,
                 completed: false,
             };
-            console.log(' newTodo:', newTodo);
-
             this.todos.push(newTodo);
-            form.reset();
         }
-        console.log('this.todos', this.todos);
     };
 
     completeAllTodos = () => {
@@ -44,12 +39,10 @@ class TodosState {
     };
 
     removeTodo = (id) => {
-        console.log('removeTodo =>id', id);
         this.todos = this.todos.filter((prevTodo) => prevTodo.id !== id);
     };
 
     toggleTodo = (id) => {
-        console.log('toggleTodo ~ id:', id);
         this.todos = this.todos.map((prevTodo) => {
             if (prevTodo.id === Number(id)) {
                 return {
