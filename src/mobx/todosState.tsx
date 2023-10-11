@@ -1,7 +1,13 @@
 import { makeObservable, observable, action, computed } from 'mobx';
 
+interface ITodo {
+    id: number;
+    text: string;
+    completed: boolean;
+}
+
 class TodosState {
-    todos = [];
+    todos: ITodo[] = [];
 
     constructor() {
         makeObservable(this, {
@@ -16,14 +22,14 @@ class TodosState {
         });
     }
 
-    addTodo = (event) => {
-        const form = event.target;
+    addTodo = (event: React.FormEvent<HTMLFormElement>) => {
+        const form = event.currentTarget;
         const formData = new FormData(form);
         const todoText = formData.get('todo-input');
         if (todoText) {
-            const newTodo = {
+            const newTodo: ITodo = {
                 id: Math.ceil(Math.random() * 1000),
-                text: todoText,
+                text: todoText.toString(),
                 completed: false,
             };
             this.todos.push(newTodo);
@@ -38,11 +44,11 @@ class TodosState {
         this.todos = this.todos.map((prevTodo) => ({ ...prevTodo, completed: false }));
     };
 
-    removeTodo = (id) => {
+    removeTodo = (id: number) => {
         this.todos = this.todos.filter((prevTodo) => prevTodo.id !== id);
     };
 
-    toggleTodo = (id) => {
+    toggleTodo = (id: number) => {
         this.todos = this.todos.map((prevTodo) => {
             if (prevTodo.id === Number(id)) {
                 return {

@@ -27,7 +27,17 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const Todo = observer(({ todo: { completed, text, id } }) => {
+interface ITodo {
+    id: number;
+    text: string;
+    completed: boolean;
+}
+
+interface TodoAppProps {
+    todoState: typeof todoState;
+}
+
+const Todo: React.FC<{ todo: ITodo }> = observer(({ todo: { completed, text, id } }) => {
     return (
         <>
             <ListItem
@@ -46,12 +56,12 @@ const Todo = observer(({ todo: { completed, text, id } }) => {
                         checked={completed}
                         tabIndex={-1}
                         disableRipple
-                        inputProps={{ 'aria-labelledby': id }}
+                        inputProps={{ 'aria-labelledby': `${id}` }}
                     />
                 </ListItemIcon>
                 <ListItemText
                     sx={{ textDecoration: `${completed && 'line-through'}` }}
-                    id={id}
+                    id={`${id}`}
                     primary={text}
                 />
             </ListItem>
@@ -80,10 +90,10 @@ const TodoList = observer(() => {
 const TodoForm = observer(() => {
     return (
         <Box
-            onSubmit={(event) => {
+            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault();
                 todoState.addTodo(event);
-                event.target.reset();
+                event.currentTarget.reset();
             }}
             component='form'
             sx={{
@@ -107,7 +117,7 @@ const TodoForm = observer(() => {
     );
 });
 
-const TodoApp = observer(() => {
+const TodoApp: React.FC<TodoAppProps> = observer(() => {
     return (
         <Grid container flexDirection='column'>
             <Grid
@@ -117,11 +127,11 @@ const TodoApp = observer(() => {
                     alignItems: 'center',
                     justifyContent: 'space-around',
                 }}>
-                <Typography variant='p'>
+                <Typography variant='body1'>
                     Completed Todos : {todoState.completedTodosCount}
                 </Typography>
                 <TodoForm />
-                <Typography variant='p'>
+                <Typography variant='body1'>
                     Incompleted Todos :{todoState.incompletedTodosCount}
                 </Typography>
             </Grid>
