@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable, action, computed } from 'mobx';
+import { makeAutoObservable, observable, action, computed, autorun } from 'mobx';
 import { BASE_OMDB_URL, MOVIES_PER_PAGE } from '../utils';
 
 export interface IMovie {
@@ -6,7 +6,7 @@ export interface IMovie {
     Title: string;
     Type: string;
     Year: string;
-    imdbId: string;
+    imdbID: string;
 }
 
 const generateQueryParams = (params: Record<string, any>) =>
@@ -19,8 +19,11 @@ class MoviesState {
     isLoading: boolean = false;
     isError: boolean = false;
     totalMoviesCount: number = 0;
-    currentPageNum: number = 1;
     totalNumberOfPages: number = 0;
+    searchParams = {
+        s: '', // movie string
+        page: 1, // page number
+    };
 
     constructor() {
         makeAutoObservable(this, {
@@ -28,18 +31,32 @@ class MoviesState {
             isLoading: observable,
             isError: observable,
             getMovies: action,
-            setCurrentPageNumber: action,
             setTotalNumberOfPages: action,
-            currentPageNumber: computed,
+            searchParams: observable,
+            setSearchParams: action,
+        });
+
+        autorun(() => {
+            if (this.searchParams.s) {
+                console.log('searchParams changed', this.searchParams);
+                this.getMovies();
+            }
         });
     }
 
-    async getMovies(params: Record<string, any>) {
+    setSearchParams(params: Record<string, any>) {
+        this.searchParams = {
+            s: params.s,
+            page: params.s === this.searchParams.s ? params.page : 1,
+        };
+    }
+
+    async getMovies() {
         this.isLoading = true;
         const apiKey = process.env.REACT_APP_OMDB_API_KEY;
-        const endpoint = `${BASE_OMDB_URL}?apikey=${apiKey}&${generateQueryParams(
-            params
-        )}`;
+
+        const queryParams = generateQueryParams(this.searchParams);
+        const endpoint = `${BASE_OMDB_URL}?apikey=${apiKey}&${queryParams}`;
 
         try {
             const data = await fetch(endpoint);
@@ -57,17 +74,9 @@ class MoviesState {
         }
     }
 
-    setCurrentPageNumber(num: number) {
-        this.currentPageNum = num;
-    }
-
     // TODO => Check how to compute it automatically
     setTotalNumberOfPages() {
         this.totalNumberOfPages = Math.floor(this.totalMoviesCount / MOVIES_PER_PAGE);
-    }
-
-    get currentPageNumber() {
-        return this.currentPageNum;
     }
 }
 

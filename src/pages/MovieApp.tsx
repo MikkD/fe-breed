@@ -1,49 +1,90 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid, Box, TextField, Button, Typography, Divider } from '@mui/material';
 // CARD
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+// PAGINATION
+import { Stack, Pagination } from '@mui/material';
 //
 import { moviesState } from '../mobx/moviesState';
 import { observer } from 'mobx-react-lite';
 import { IMovie } from '../mobx/moviesState';
 
-const MovieCard: React.FC<IMovie> = ({ Poster, Title, Type, Year, imdbId }) => {
-    const getSingleMovie = (imdbId: string) => {};
-    return (
-        <Card
-            sx={{
-                width: 350,
-                height: 350,
+// MOVIE_DETAILS_STATE
+import { movieDetailsState } from '../mobx/movieDetailsState';
+import MovieDetailsModal from '../components/MovieDetailsModal';
 
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                margin: '10px',
-            }}>
-            <CardMedia sx={{ height: 150 }} image={Poster} title={Type} />
-            <CardContent>
-                <Typography gutterBottom variant='h5' component='div'>
-                    {Title}
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                    Year: {Year}
-                </Typography>
-            </CardContent>
-            <CardActions sx={{ padding: '0px' }}>
-                <Button
-                    sx={{ padding: '16px' }}
-                    onClick={() => getSingleMovie(imdbId)}
-                    size='large'
-                    fullWidth>
-                    Learn More
-                </Button>
-            </CardActions>
-        </Card>
+const MoviePagination = observer(() => {
+    const handlePagination = (event: React.ChangeEvent<unknown>, page: number) => {
+        moviesState.setSearchParams({
+            s: moviesState.searchParams.s,
+            page,
+        });
+    };
+    return (
+        <Stack spacing={2}>
+            <Pagination
+                onChange={handlePagination}
+                count={moviesState.totalNumberOfPages}
+                color='secondary'
+                defaultPage={1}
+                page={moviesState.searchParams.page}
+                size='large'
+            />
+        </Stack>
     );
-};
+});
+
+const MovieCard: React.FC<IMovie> = observer(({ Poster, Title, Type, Year, imdbID }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const onModalOpen = () => {
+        setIsModalOpen(true);
+
+        movieDetailsState.fetchMovieDetails(imdbID);
+    };
+
+    const onModalClose = () => {
+        setIsModalOpen(false);
+    };
+
+    return (
+        <>
+            <Card
+                sx={{
+                    width: 350,
+                    height: 350,
+
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    margin: '10px',
+                }}>
+                <CardMedia sx={{ height: 150 }} image={Poster} title={Type} />
+                <CardContent>
+                    <Typography gutterBottom variant='h5' component='div'>
+                        {Title}
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                        Year: {Year}
+                    </Typography>
+                </CardContent>
+                <CardActions sx={{ padding: '0px' }}>
+                    <Button
+                        sx={{ padding: '16px' }}
+                        onClick={onModalOpen}
+                        size='large'
+                        fullWidth>
+                        Learn More
+                    </Button>
+                </CardActions>
+            </Card>
+            <MovieDetailsModal isModalOpen={isModalOpen} onModalClose={onModalClose} />
+        </>
+    );
+});
 
 const MovieList: React.FC = observer(() => {
     if (moviesState.isLoading)
@@ -71,23 +112,25 @@ const MovieList: React.FC = observer(() => {
                 justifyContent: 'center',
             }}>
             {moviesState.movies.map((movie) => (
-                <MovieCard key={movie.imdbId} {...movie} />
+                <MovieCard key={movie.imdbID} {...movie} />
             ))}
         </Box>
     );
 });
 
-const SearchForm: React.FC = () => {
+const SearchForm: React.FC = observer(() => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
         const formData = new FormData(form);
         const inputValue = formData.get('search-movie-input');
-        const searchParams = {
-            s: inputValue,
-            p: moviesState.currentPageNum,
-        };
-        moviesState.getMovies(searchParams);
+        if (inputValue?.toString().trim()) {
+            moviesState.setSearchParams({
+                s: inputValue,
+                page: moviesState.searchParams.page,
+            });
+        }
+
         event.currentTarget.reset();
     };
 
@@ -115,15 +158,17 @@ const SearchForm: React.FC = () => {
             </Button>
         </Box>
     );
-};
+});
 
 const MovieApp = observer(() => {
     return (
         <Grid container display='flex' flexDirection='column' pt={2}>
+            {/* Search */}
             <Grid item xs={12}>
                 <SearchForm />
             </Grid>
             <Divider />
+            {/* Info */}
             <Grid
                 item
                 sx={{
@@ -137,14 +182,32 @@ const MovieApp = observer(() => {
                     Pages: {moviesState.totalNumberOfPages}
                 </Typography>
                 <Typography component='span'>
+                    Current Page: {moviesState.searchParams.page}
+                </Typography>
+                <Typography component='span'>
                     Total Movies: {moviesState.totalMoviesCount}
                 </Typography>
             </Grid>
             <Divider />
-
+            {/* List */}
             <Grid item>
                 <MovieList />
             </Grid>
+            <Divider />
+            {/* Pagination */}
+            {!!moviesState.movies.length && (
+                <Grid
+                    item
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '30px',
+                        width: '100%',
+                    }}>
+                    <MoviePagination />
+                </Grid>
+            )}
         </Grid>
     );
 });
