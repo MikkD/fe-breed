@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Box, TextField, Button, Typography, Divider } from '@mui/material';
 // CARD
 import Card from '@mui/material/Card';
@@ -15,6 +15,11 @@ import { IMovie } from '../mobx/moviesState';
 // MOVIE_DETAILS_STATE
 import { movieDetailsState } from '../mobx/movieDetailsState';
 import MovieDetailsModal from '../components/MovieDetailsModal';
+
+interface MovieCardViewProps extends IMovie {
+    isModalOpen: boolean;
+    setIsModalOpen: (isOpen: boolean) => void;
+}
 
 const MoviePagination = observer(() => {
     const handlePagination = (event: React.ChangeEvent<unknown>, page: number) => {
@@ -37,52 +42,75 @@ const MoviePagination = observer(() => {
     );
 });
 
-const MovieCard: React.FC<IMovie> = observer(({ Poster, Title, Type, Year, imdbID }) => {
+const MovieCardView: React.FC<MovieCardViewProps> = observer(
+    ({ Poster, Title, Type, Year, imdbID, setIsModalOpen, isModalOpen }) => {
+        return (
+            <>
+                <Card
+                    sx={{
+                        width: 350,
+                        height: 350,
+
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        margin: '10px',
+                    }}>
+                    <CardMedia sx={{ height: 150 }} image={Poster} title={Type} />
+                    <CardContent>
+                        <Typography gutterBottom variant='h5' component='div'>
+                            {Title}
+                        </Typography>
+                        <Typography variant='body2' color='text.secondary'>
+                            Year: {Year}
+                        </Typography>
+                    </CardContent>
+                    <CardActions sx={{ padding: '0px' }}>
+                        <Button
+                            sx={{ padding: '16px' }}
+                            onClick={() => setIsModalOpen(true)}
+                            size='large'
+                            fullWidth>
+                            Learn More
+                        </Button>
+                    </CardActions>
+                </Card>
+                <MovieDetailsModal
+                    isModalOpen={isModalOpen}
+                    onModalClose={() => setIsModalOpen(false)}
+                />
+            </>
+        );
+    }
+);
+
+export interface MovieCardProps {
+    movie: {
+        Poster: string;
+        Title: string;
+        Type: string;
+        Year: string;
+        imdbID: string;
+    };
+}
+const MovieCard: React.FC<MovieCardProps> = observer((props) => {
+    console.log('🚀 ~ file: props:', props);
+    console.log('🚀 🚀 🚀  ~ props.movie:', props.movie);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const onModalOpen = () => {
-        setIsModalOpen(true);
-
-        movieDetailsState.fetchMovieDetails(imdbID);
-    };
-
-    const onModalClose = () => {
-        setIsModalOpen(false);
-    };
+    useEffect(() => {
+        if (isModalOpen) {
+            movieDetailsState.fetchMovieDetails(props.movie.imdbID);
+        }
+    }, [isModalOpen, props.movie.imdbID]);
 
     return (
-        <>
-            <Card
-                sx={{
-                    width: 350,
-                    height: 350,
-
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    margin: '10px',
-                }}>
-                <CardMedia sx={{ height: 150 }} image={Poster} title={Type} />
-                <CardContent>
-                    <Typography gutterBottom variant='h5' component='div'>
-                        {Title}
-                    </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                        Year: {Year}
-                    </Typography>
-                </CardContent>
-                <CardActions sx={{ padding: '0px' }}>
-                    <Button
-                        sx={{ padding: '16px' }}
-                        onClick={onModalOpen}
-                        size='large'
-                        fullWidth>
-                        Learn More
-                    </Button>
-                </CardActions>
-            </Card>
-            <MovieDetailsModal isModalOpen={isModalOpen} onModalClose={onModalClose} />
-        </>
+        <MovieCardView
+            setIsModalOpen={setIsModalOpen}
+            isModalOpen={isModalOpen}
+            {...props.movie}
+        />
     );
 });
 
@@ -112,7 +140,7 @@ const MovieList: React.FC = observer(() => {
                 justifyContent: 'center',
             }}>
             {moviesState.movies.map((movie) => (
-                <MovieCard key={movie.imdbID} {...movie} />
+                <MovieCard key={movie.imdbID} movie={movie} />
             ))}
         </Box>
     );
