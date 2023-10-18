@@ -2,6 +2,15 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import useBreedList from '../hooks/useBreedList';
 import { AnimalType } from '../types';
 import { ANIMALS } from '../utils';
+import {
+    TextField,
+    FormControl,
+    Box,
+    InputLabel,
+    MenuItem,
+    Select,
+    Button,
+} from '@mui/material';
 
 export type petParamsType = {
     location: FormDataEntryValue | null;
@@ -32,44 +41,63 @@ export const SubmitForm = ({
         e.currentTarget.reset();
     };
 
-    const selectAnimal = (e: ChangeEvent<HTMLSelectElement>) =>
-        setAnimal(e.target.value as AnimalType);
+    const selectAnimal = (e: any) => setAnimal(e.target.value as AnimalType);
 
     return (
-        <div className='search'>
-            <form className='search-form' onSubmit={handleSubmit}>
-                <div className='form-item'>
-                    <label htmlFor='location'>Location.Selected Location:</label>
-                    <input placeholder='Location' name='location' id='location'></input>
-                </div>
-                <div className='form-item'>
-                    <label htmlFor='selection'>Animal. Selected Animal:</label>
-                    <select name='animal' id='selection' onChange={selectAnimal}>
-                        <option value=''></option>
-                        {!!animals?.length &&
-                            animals.map((animal) => (
-                                <option key={animal} value={animal}>
-                                    {animal}
-                                </option>
-                            ))}
-                    </select>
-                </div>
-                <div className='form-item'>
-                    <label htmlFor='breed'>Breed. Selected Breed :</label>
-                    <select disabled={!breeds?.length || !animal} id='breed' name='breed'>
-                        <option value={''}></option>
-                        {!!breeds.length &&
-                            breeds.map((breed) => (
-                                <option key={breed} value={breed}>
-                                    {breed}
-                                </option>
-                            ))}
-                    </select>
-                </div>
-                <div className='form-item'>
-                    <input disabled={!animal} type='submit' value='submit'></input>
-                </div>
-            </form>
-        </div>
+        <Box component='form' onSubmit={handleSubmit}>
+            <FormControl margin='normal' fullWidth>
+                <TextField
+                    placeholder='Location'
+                    name='location'
+                    id='location'
+                    variant='outlined'
+                />
+            </FormControl>
+
+            <FormControl margin='normal' fullWidth>
+                <InputLabel htmlFor='selection'>Animal:</InputLabel>
+                <Select
+                    name='animal'
+                    id='selection'
+                    onChange={selectAnimal}
+                    variant='outlined'>
+                    <MenuItem value=''>
+                        <em>None</em>
+                    </MenuItem>
+                    {!!animals?.length &&
+                        animals.map((animal) => (
+                            <MenuItem key={animal} value={animal}>
+                                {animal}
+                            </MenuItem>
+                        ))}
+                </Select>
+            </FormControl>
+
+            <FormControl margin='normal' fullWidth disabled={!breeds?.length || !animal}>
+                <InputLabel htmlFor='breed'>Breed</InputLabel>
+                <Select name='breed' id='breed' variant='outlined'>
+                    <MenuItem value=''>
+                        <em>None</em>
+                    </MenuItem>
+                    {!!breeds.length &&
+                        breeds.map((breed) => (
+                            <MenuItem key={breed} value={breed}>
+                                {breed}
+                            </MenuItem>
+                        ))}
+                </Select>
+            </FormControl>
+
+            <Button
+                variant='contained'
+                color='primary'
+                type='submit'
+                disabled={!animal}
+                fullWidth
+                size='large'
+                style={{ marginTop: '1rem' }}>
+                Submit
+            </Button>
+        </Box>
     );
 };

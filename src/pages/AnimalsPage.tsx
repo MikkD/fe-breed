@@ -1,9 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 import '../pages/AnimalsPage.css';
 import { Pet } from '../components/Pet';
-import { List } from '../components/List';
+import { ReusableList } from '../components/ReusableList';
 import { BASE_URL } from '../utils';
 import { SubmitForm, petParamsType } from '../components/SubmitForm';
+import { Grid } from '@mui/material';
 
 function AnimalsPage() {
     const [pets, setPets] = useState([]);
@@ -15,13 +16,16 @@ function AnimalsPage() {
         const { pets } = await data.json();
         setPets(pets);
     }
+
     return (
-        <div className='animals-container'>
-            <SubmitForm getAnimals={getAnimals} />
-            <div className='results'>
-                <List data={pets} itemRenderer={Pet} />
-            </div>
-        </div>
+        <Grid container justifyContent='space-around'>
+            <Grid item xs={12} sm={5}>
+                <SubmitForm getAnimals={getAnimals} />
+            </Grid>
+            <Grid item xs={12} sm={5}>
+                <ReusableList data={pets} itemRenderer={Pet} />
+            </Grid>
+        </Grid>
     );
 }
 
