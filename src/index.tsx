@@ -19,6 +19,7 @@ import MovieApp from './pages/MovieApp';
 import MenuIcon from '@mui/icons-material/Menu';
 
 const pages = ['home,cats,movies'];
+
 function Layout() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);

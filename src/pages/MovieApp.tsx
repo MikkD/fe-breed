@@ -152,6 +152,10 @@ const SearchForm: React.FC = observer(() => {
         const form = event.currentTarget;
         const formData = new FormData(form);
         const inputValue = formData.get('search-movie-input');
+        console.log(
+            '🚀 ~ file: MovieApp.tsx:155 ~ handleSubmit ~ inputValue:',
+            inputValue
+        );
         if (inputValue?.toString().trim()) {
             moviesState.setSearchParams({
                 s: inputValue,

@@ -37,6 +37,7 @@ class MoviesState {
         });
 
         autorun(() => {
+            console.log('🚀 ~ ~ autorun ,this.searchParam:', this.searchParams);
             if (this.searchParams.s) {
                 console.log('searchParams changed', this.searchParams);
                 this.getMovies();
@@ -45,6 +46,7 @@ class MoviesState {
     }
 
     setSearchParams(params: Record<string, any>) {
+        console.log('🚀 ~ ~ params:', params);
         this.searchParams = {
             s: params.s,
             page: params.s === this.searchParams.s ? params.page : 1,
@@ -52,15 +54,21 @@ class MoviesState {
     }
 
     async getMovies() {
+        console.log('______getMOVIES triggered');
         this.isLoading = true;
-        const apiKey = process.env.REACT_APP_OMDB_API_KEY;
+        // process.env.REACT_APP_OMDB_API_KEY;
+        const apiKey = import.meta.env.VITE_REACT_APP_OMDB_API_KEY;
+        console.log('🚀 apiKey:', apiKey);
 
         const queryParams = generateQueryParams(this.searchParams);
+        console.log('🚀  queryParams:', queryParams);
         const endpoint = `${BASE_OMDB_URL}?apikey=${apiKey}&${queryParams}`;
 
+        console.log('🚀 ~  endpoint:', endpoint);
         try {
             const data = await fetch(endpoint);
             const movies = await data.json();
+            console.log('🚀 ~  movies:', movies);
 
             if (movies?.totalResults && movies.Search) {
                 this.movies = movies.Search;
