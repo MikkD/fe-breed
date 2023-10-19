@@ -193,6 +193,7 @@ const SearchForm: React.FC = observer(() => {
 });
 
 const MovieApp = observer(() => {
+    console.log('LOG API KEY', import.meta.env.VITE_REACT_APP_OMDB_API_KEY);
     return (
         <Grid container display='flex' flexDirection='column' pt={2}>
             {/* Search */}

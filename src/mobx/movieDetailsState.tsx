@@ -52,8 +52,9 @@ class MovieDetails {
             this.resetMovieDetails();
             this.isLoading = true;
             try {
+                const apiKey = import.meta.env.VITE_REACT_APP_OMDB_API_KEY;
                 const movieData = await fetch(
-                    `${BASE_OMDB_URL}?apikey=${process.env.REACT_APP_OMDB_API_KEY}&i=${id}`
+                    `${BASE_OMDB_URL}?apikey=${apiKey}&i=${id}`
                 );
                 const movieDetails = await movieData.json();
                 this.movie = movieDetails;
