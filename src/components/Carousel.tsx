@@ -1,4 +1,4 @@
-import { ImageList, ImageListItem, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import React, { useState } from 'react';
 import '../pages/AnimalsPage.css';
 
@@ -7,15 +7,12 @@ interface ICarouselProps {
 }
 
 export const Carousel: React.FC<ICarouselProps> = ({ images }) => {
-    if (!images?.length) return;
+    if (!images?.length) return null;
 
     const [mainImageIndex, setMainImageIndex] = useState<number>(0);
 
-    const setMainImage = (idx: number) => {
-        if (mainImageIndex !== idx) {
-            setMainImageIndex(idx);
-        }
-    };
+    const setMainImage = (idx: number) =>
+        mainImageIndex !== idx ? setMainImageIndex(idx) : undefined;
 
     return (
         <Grid container alignItems='center'>
@@ -28,7 +25,12 @@ export const Carousel: React.FC<ICarouselProps> = ({ images }) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                 }}>
-                <img src={images[mainImageIndex]} alt='main-pet-images' height={300} />
+                <img
+                    data-testId='hero-img'
+                    src={images[mainImageIndex]}
+                    alt='main-pet-images'
+                    height={300}
+                />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <div className='carousel-image-list'>
