@@ -52,15 +52,21 @@
 .pet-details-container {
     box-sizing: border-box;
     border: 1px solid red;
-    height: 100vh;
     padding: 20px;
 }
+/* CAROUSEL */
 .carousel {
     display: flex;
 }
 
+.carousel img {
+    height: 100%;
+}
+.carousel-image-list {
+    height: 100%;
+}
+
 .pet-details-container img {
-    border-radius: 50%;
     padding: 10px;
 }
 .non-active-img {

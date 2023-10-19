@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import PetDetails from './pages/PetDatails';
+import PetDetails from './pages/PetDetails';
 import TodoApp from './pages/TodoApp';
 import AnimalsPage from './pages/AnimalsPage';
 import { createBrowserRouter, RouterProvider, NavLink, Outlet } from 'react-router-dom';
