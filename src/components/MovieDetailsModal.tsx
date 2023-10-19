@@ -38,7 +38,7 @@ const MovieDetailsModal = observer(({ isModalOpen, onModalClose }: any) => {
             aria-labelledby='modal-modal-title'
             aria-describedby='modal-modal-description'>
             <Card sx={style}>
-                <CardMedia sx={{ height: 450 }} image={Poster} title={Type} />
+                <CardMedia sx={{ height: 250 }} image={Poster} title={Type} />
                 <CardContent>
                     <Typography gutterBottom variant='h5' component='div'>
                         {Title}
