@@ -1,47 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BASE_URL } from '../utils';
+import { useFetchSinglePet } from '../hooks/useFetchSinglePet';
 import { Carousel } from '../components/Carousel';
 import { Typography } from '@mui/material';
 
-interface IPetDetails {
-    animal: string;
-    breed: string;
-    city: string;
-    id: string;
-    name: string;
-    description: string;
-    images: [];
-}
-
 function PetDetails() {
     const { id } = useParams();
-    const [petDetails, setPetDetails] = useState<IPetDetails | null>(null);
-    const {
-        animal,
-        breed,
-        city,
-        id: petId,
-        name,
-        description,
-        images,
-    } = { ...petDetails };
+    const { petDetails, isLoading, isError } = useFetchSinglePet(id);
+    const { animal, breed, city, name, description, images } = { ...petDetails };
 
-    useEffect(() => {
-        if (id) {
-            fetch(`${BASE_URL}/pets?id=${id}`)
-                .then((data) => data.json())
-                .then(({ pets }) => {
-                    if (pets?.length) {
-                        setPetDetails(pets[0]);
-                    }
-                })
-                .catch((err) => console.error('error is', err));
-        }
-    }, [id]);
+    if (isError)
+        return (
+            <Typography variant='h3' data-testId='error-block'>
+                ...Error
+            </Typography>
+        );
+
+    if (!petDetails) {
+        return (
+            <Typography variant='h3' data-testId='no-pet-data-block'>
+                ...No Pet Data Found
+            </Typography>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <Typography variant='h3' data-testId='loader'>
+                ...Loading
+            </Typography>
+        );
+    }
 
     return (
-        <div className='pet-details-container'>
+        <div data-testId='pet-info-block' className='pet-details-container'>
             <Carousel images={images || []} />
             <div className='pet-info'>
                 <Typography variant='h6' gutterBottom>

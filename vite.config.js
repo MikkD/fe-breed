@@ -5,6 +5,8 @@ export default defineConfig({
     plugins: [react()],
     root: 'src',
     test: {
+        globals: true,
         environment: 'happy-dom',
+        setupFiles: ['./setupVitest.js'],
     },
 });
