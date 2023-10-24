@@ -7,14 +7,6 @@ import { Typography } from '@mui/material';
 function PetDetails() {
     const { id } = useParams();
     const { petDetails, isLoading, isError } = useFetchSinglePet(id);
-    const { animal, breed, city, name, description, images } = { ...petDetails };
-
-    if (isError)
-        return (
-            <Typography variant='h3' data-testId='error-block'>
-                ...Error
-            </Typography>
-        );
 
     if (!petDetails) {
         return (
@@ -24,6 +16,13 @@ function PetDetails() {
         );
     }
 
+    if (isError)
+        return (
+            <Typography variant='h3' data-testId='error-block'>
+                ...Error
+            </Typography>
+        );
+
     if (isLoading) {
         return (
             <Typography variant='h3' data-testId='loader'>
@@ -31,6 +30,7 @@ function PetDetails() {
             </Typography>
         );
     }
+    const { animal, breed, city, name, description, images } = { ...petDetails };
 
     return (
         <div data-testId='pet-info-block' className='pet-details-container'>
