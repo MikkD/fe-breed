@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import PetDetails from './pages/PetDetails';
 import TodoApp from './pages/TodoApp';
 import AnimalsPage from './pages/AnimalsPage';
+import InterviewOne from './pages/InterviewOne';
+
 import { createBrowserRouter, RouterProvider, NavLink, Outlet } from 'react-router-dom';
 import { todoState } from './mobx/todosState';
 import './index.css';
@@ -18,7 +20,7 @@ import {
 import MovieApp from './pages/MovieApp';
 import MenuIcon from '@mui/icons-material/Menu';
 
-const pages = ['home,cats,movies'];
+const pages = ['home,cats,movies', 'interview-one'];
 
 function Layout() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -102,6 +104,13 @@ function Layout() {
                             to='/movie'>
                             MovieApp
                         </NavLink>
+                        <NavLink
+                            className={({ isActive, isPending }) =>
+                                isPending ? 'pending' : isActive ? 'active' : 'white'
+                            }
+                            to='/interview-one'>
+                            Interview Task One
+                        </NavLink>
                     </Box>
                 </Toolbar>
             </AppBar>
@@ -130,6 +139,10 @@ const router = createBrowserRouter([
             {
                 path: '/movie',
                 element: <MovieApp />,
+            },
+            {
+                path: '/interview-one',
+                element: <InterviewOne />,
             },
         ],
     },
