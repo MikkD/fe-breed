@@ -26,17 +26,17 @@ export const getSalaryData = () => {
 };
 
 //! Refactored
-export const defineRoles = (salaryData) =>
-    salaryData.length &&
-    salaryData
-        .map((data) => data.role)
-        .filter((role, idx, arr) => arr.indexOf(role) === idx);
+// export const defineRoles = (salaryData) =>
+//     salaryData.length &&
+//     salaryData
+//         .map((data) => data.role)
+//         .filter((role, idx, arr) => arr.indexOf(role) === idx);
 
-export const defineCompanies = (salaryData) =>
-    salaryData.length &&
-    salaryData
-        .map((data) => data.company)
-        .filter((company, idx, arr) => arr.indexOf(company) === idx);
+// export const defineCompanies = (salaryData) =>
+//     salaryData.length &&
+//     salaryData
+//         .map((data) => data.company)
+//         .filter((company, idx, arr) => arr.indexOf(company) === idx);
 
 // const roles = defineRoles(salaryData);
 // const companies = defineCompanies(salaryData);
@@ -46,4 +46,49 @@ export const defineUniqueValues = (salaryData, type) => {
     return salaryData
         .map((data) => data[type])
         .filter((company, idx, arr) => arr.indexOf(company) === idx);
+};
+
+//1_Salary Finder
+export const findSalary = (salaryData, selectedRole, selectedCompany) => {
+    if (salaryData?.length && selectedRole && selectedCompany) {
+        return salaryData.find(
+            (data) => data.role === selectedRole && data.company === selectedCompany
+        ).salary;
+    }
+};
+
+//2_Industry Average Salary Finder
+export const getIndustryAverageSalary = (salaryData, selectedRole) => {
+    if (!(salaryData.length && selectedRole)) return;
+    const companies = salaryData.filter((data) => data.role === selectedRole);
+    const averageSalaryPerIndustry =
+        companies.reduce((acc, { salary }) => acc + salary, 0) / companies.length;
+    return averageSalaryPerIndustry;
+};
+
+//3_Average Salary in Company
+export const getAverageCompanySalary = (salaryData, selectedCompany) => {
+    if (!(salaryData.length && selectedCompany)) return;
+    const selectedCompanyData = salaryData.filter(
+        (data) => data.company === selectedCompany
+    );
+    const averageSelectedCompanyData =
+        selectedCompanyData.reduce((acc, { salary }) => acc + salary, 0) /
+        selectedCompanyData.length;
+    return averageSelectedCompanyData;
+};
+
+//4_Average Tech Salary
+export const getAverageTechSalary = (salaryData) =>
+    salaryData.length &&
+    salaryData.reduce((acc, { salary }) => acc + salary, 0) / salaryData.length;
+
+// Converter
+export const convertSalary = (salary) => {
+    if (!salary) return;
+    return salary.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+    });
 };
