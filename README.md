@@ -1,70 +1,41 @@
-# Getting Started with Create React App
+# fe-breed
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React and TypeScript practice app that puts several small features behind one router. I use it to try out state management and testing patterns, so it isn't a production product.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+| Route | What it does |
+|---|---|
+| `/` | Browse pets from a public practice API |
+| `/details/:id` | Pet details with an image carousel |
+| `/movie` | Movie search using the OMDb API, with state in MobX |
+| `/todo` | Todo list with state in MobX |
+| `/interview-one` | Salary table exercise with filters and averages |
 
-### `npm start`
+## Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+React 18, TypeScript, MobX, React Router, Material UI, Vite, Vitest and React Testing Library.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Run it locally
 
-### `npm test`
+```bash
+npm ci --ignore-scripts
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`--ignore-scripts` skips the native build of the legacy `node-sass` dependency, which the app doesn't need to run or test.
 
-### `npm run build`
+The movie page needs a free [OMDb API key](https://www.omdbapi.com/apikey.aspx). Vite's root is `src`, so create `src/.env`:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+VITE_REACT_APP_OMDB_API_KEY=your_key
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Command | What it does |
+|---|---|
+| `npm start` | Start the dev server |
+| `npx vitest run` | Run the tests once |
+| `npm run build` | Build to `src/dist` |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Tests
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Six tests in `src/__tests__` cover the carousel, the pet details page and the `useFetchSinglePet` hook, with network calls mocked.
