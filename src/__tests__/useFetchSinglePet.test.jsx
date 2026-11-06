@@ -60,7 +60,6 @@ test('single pet data is not fetched when no id is given ', async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     await waitFor(() => {
-        console.log('_____Result:', result.current);
         expect(result.current.petDetails).toBe(null);
     });
 });

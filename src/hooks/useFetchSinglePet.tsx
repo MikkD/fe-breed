@@ -22,7 +22,6 @@ export const useFetchSinglePet = (id: number | string | undefined) => {
             fetch(`${BASE_URL}/pets?id=${id}`)
                 .then((data) => data.json())
                 .then((parsedData) => {
-                    console.log('parsedData', parsedData);
                     const pets = parsedData.pets;
                     if (pets?.length) {
                         setPetDetails(pets[0]);
